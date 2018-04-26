@@ -31,6 +31,33 @@ double gprime(double x) {
     return BETA * g(x) * (1 - g(x));
 }
 
+bool getTarget(int type, double input[MAX], int inputs) {
+    switch (type) {
+        case 1:
+            for (int i = 1; i < inputs; ++i) {
+                if (input[i]) {
+                    return true;
+                }
+            }
+            return false;
+
+        case 2:
+            for (int i = 1; i < inputs; ++i) {
+                if (!input[i]) {
+                    return false;
+                }
+            }
+            return true;
+
+        case 3:
+            auto xorOut = static_cast<bool>(input[1]);
+            for (int i = 2; i < inputs; ++i) {
+                xorOut = xorOut != input[i];
+            }
+            return xorOut;
+    }
+}
+
 int main(int argc, char* argv[]) {
 
     int inputs, hiddens;            // aantal invoer- en verborgen knopen
@@ -85,13 +112,10 @@ int main(int argc, char* argv[]) {
         // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
         // input[1] = x; input[2] = y; target = dexor;
 
-        target = true;
         for (int j = 1; j < inputs; ++j) {
             input[j] = random() % 2;
-            if (!input[j]) {
-                target = false;
-            }
         }
+        target = getTarget(binary, input, inputs);
 
         //TODO-3 stuur het voorbeeld door het netwerk
         // reken inhidden's uit, acthidden's, inoutput en netoutput
@@ -134,15 +158,12 @@ int main(int argc, char* argv[]) {
 
     //TODO-6 beoordeel het netwerk en rapporteer
 
-    for (int i = 0; i < pow(inputs - 1, 2); ++i) {
+    for (int i = 0; i < pow(2, inputs - 1); ++i) {
 
-        target = true;
         for (int j = 1; j < inputs; ++j) {
             input[j] = (i >> (inputs - j - 1)) & 1;
-            if (!input[j]) {
-                target = false;
-            }
         }
+        target = getTarget(binary, input, inputs);
 
         for (int j = 1; j < hiddens; ++j) {
             inhidden[j] = 0;
