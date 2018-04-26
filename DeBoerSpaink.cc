@@ -66,7 +66,8 @@ int main(int argc, char *argv[]) {
     epochs = atoi(argv[3]);
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
-    srand(time(NULL));
+    srand(time(nullptr));
+    srandom(time(nullptr));
 
     //TODO-1 initialiseer de gewichten random tussen -1 en 1:
     for (int i = 0; i < inputs; ++i)
@@ -81,10 +82,13 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < epochs; i++) {
 
-        //TODO-2 lees een voorbeeld in naar input en target, of genereer dat ter plekke:
-        // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
-        // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
-        // input[1] = x; input[2] = y; target = dexor;
+        target = true;
+        for (int j = 0; j < inputs; ++j) {
+            input[j] = random() % 2;
+            if (!input[j]) {
+                target = false;
+            }
+        }
 
         //TODO-3 stuur het voorbeeld door het netwerk
         // reken inhidden's uit, acthidden's, inoutput en netoutput
