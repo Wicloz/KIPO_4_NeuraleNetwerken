@@ -116,6 +116,16 @@ int main(int argc, char* argv[]) {
 
         //TODO-5 update gewichten hiddentooutput en inputtohidden
 
+        for (int j = 0; j < hiddens; ++j) {
+            hiddentooutput[j] += ALPHA * acthidden[j] * delta;
+        }
+
+        for (int j = 1; j < hiddens; ++j) {
+            for (int k = 0; k < inputs; ++k) {
+                inputtohidden[k][j] += ALPHA * input[k] * deltahidden[j];
+            }
+        }
+
     }
 
     //TODO-6 beoordeel het netwerk en rapporteer
