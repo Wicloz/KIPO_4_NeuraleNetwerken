@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
     int epochs;                     // aantal trainingsvoorbeelden
     int binary;                     // binaire functie om te leren (or=1, and=2, xor=3)
 
-    if (argc != 5) {
+    if (argc != 5 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
         cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor>" << endl;
         return 1;
     }
