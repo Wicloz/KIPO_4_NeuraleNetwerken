@@ -108,6 +108,12 @@ int main(int argc, char* argv[]) {
 
         //TODO-4 bereken error, delta, en deltahidden
 
+        error = target - netoutput;
+        delta = error * gprime(inoutput);
+        for (int j = 0; j < hiddens; ++j) {
+            deltahidden[j] = gprime(inhidden[j]) * hiddentooutput[j] * delta;
+        }
+
         //TODO-5 update gewichten hiddentooutput en inputtohidden
 
     }
