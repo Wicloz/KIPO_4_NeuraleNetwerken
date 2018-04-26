@@ -3,7 +3,7 @@
 // Zie www.liacs.leidenuniv.nl/~kosterswa/AI/nnhelp.pdf
 // 19 april 2018
 // Compileren: g++ -Wall -O2 -o nn nn.cc
-// Gebruik:    ./nn <inputs> <hiddens> <epochs>
+// Gebruik:    ./nn <inputs> <hiddens> <epochs> <or|and|xor>
 // Voorbeeld:  ./nn 2 3 100000
 //
 
@@ -46,15 +46,19 @@ int main(int argc, char* argv[]) {
     double delta;                   // de delta voor de uitvoerknoop
     double deltahidden[MAX];        // de delta's voor de verborgen knopen 1..hiddens
     int epochs;                     // aantal trainingsvoorbeelden
+    int binary;                     // binaire functie om te leren (or=1, and=2, xor=3)
 
-    if (argc != 4) {
-        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs>" << endl;
+    if (argc != 5) {
+        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor>" << endl;
         return 1;
     }
 
     inputs = atoi(argv[1]) + 1;
     hiddens = atoi(argv[2]) + 1;
     epochs = atoi(argv[3]);
+    binary = string(argv[4]) == "or" ? 1 : binary;
+    binary = string(argv[4]) == "and" ? 2 : binary;
+    binary = string(argv[4]) == "xor" ? 3 : binary;
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
     srand(time(nullptr));
@@ -74,7 +78,7 @@ int main(int argc, char* argv[]) {
         hiddentooutput[i] = dRand(-1.0, 1.0);
     }
 
-    for (int i = 0; i < epochs; i++) {
+    for (int i = 0; i < epochs; ++i) {
 
         //TODO-2 lees een voorbeeld in naar input en target, of genereer dat ter plekke:
         // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
