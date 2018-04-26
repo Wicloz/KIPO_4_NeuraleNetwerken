@@ -130,5 +130,38 @@ int main(int argc, char* argv[]) {
 
     //TODO-6 beoordeel het netwerk en rapporteer
 
+    for (int i = 0; i < pow(inputs - 1, 2); ++i) {
+
+        target = true;
+        for (int j = 1; j < inputs; ++j) {
+            input[j] = (i >> (inputs - j - 1)) & 1;
+            if (!input[j]) {
+                target = false;
+            }
+        }
+
+        for (int j = 1; j < hiddens; ++j) {
+            inhidden[j] = 0;
+            for (int k = 0; k < inputs; ++k) {
+                inhidden[j] += input[k] * inputtohidden[k][j];
+            }
+            acthidden[j] = g(inhidden[j]);
+        }
+
+        inoutput = 0;
+        for (int j = 0; j < hiddens; ++j) {
+            inoutput += acthidden[j] * hiddentooutput[j];
+        }
+        netoutput = g(inoutput);
+
+        error = target - netoutput;
+
+        for (int j = 1; j < inputs; ++j) {
+            cout << input[j] << " ";
+        }
+        cout << round(netoutput) << " - Error: " << error << endl;
+
+    }
+
     return 0;
 }
