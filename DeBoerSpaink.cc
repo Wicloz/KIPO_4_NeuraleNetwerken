@@ -19,9 +19,8 @@ const int MAX = 20;
 const double ALPHA = 0.1;
 const double BETA = 1.0;
 
-double dRand(double fMin, double fMax)
-{
-    double f = (double)random() / RAND_MAX;
+double dRand(double fMin, double fMax) {
+    double f = (double) random() / RAND_MAX;
     return fMin + f * (fMax - fMin);
 }
 
@@ -35,7 +34,7 @@ double gprime(double x) {
     return BETA * g(x) * (1 - g(x));
 }//gprime
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
     int inputs, hiddens;            // aantal invoer- en verborgen knopen
     double input[MAX];              // de invoer is input[1]...input[inputs]
@@ -70,17 +69,25 @@ int main(int argc, char *argv[]) {
     srandom(time(nullptr));
 
     //TODO-1 initialiseer de gewichten random tussen -1 en 1:
-    for (int i = 0; i < inputs; ++i)
-        for (int j = 0; j < hiddens; ++j)
-            inputtohidden[i][j] = dRand(-1.0, 1.0);
-
-    for (int i = 0; i < hiddens; ++i)
-        hiddentooutput[i] = dRand(-1.0, 1.0);
-
     // inputtohidden en hiddentooutput
     // rand ( ) levert geheel randomgetal tussen 0 en RAND_MAX; denk aan casten
 
+    for (int i = 0; i < inputs; ++i) {
+        for (int j = 0; j < hiddens; ++j) {
+            inputtohidden[i][j] = dRand(-1.0, 1.0);
+        }
+    }
+
+    for (int i = 0; i < hiddens; ++i) {
+        hiddentooutput[i] = dRand(-1.0, 1.0);
+    }
+
     for (i = 0; i < epochs; i++) {
+
+        //TODO-2 lees een voorbeeld in naar input en target, of genereer dat ter plekke:
+        // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
+        // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
+        // input[1] = x; input[2] = y; target = dexor;
 
         target = true;
         for (int j = 0; j < inputs; ++j) {
