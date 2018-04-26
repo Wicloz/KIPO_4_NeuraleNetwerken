@@ -1,4 +1,3 @@
-
 //
 // C++-programma voor neuraal netwerk (NN) met één output-knoop
 // Zie www.liacs.leidenuniv.nl/~kosterswa/AI/nnhelp.pdf
@@ -24,44 +23,37 @@ double dRand(double fMin, double fMax) {
     return fMin + f * (fMax - fMin);
 }
 
-// g-functie (sigmoid)
 double g(double x) {
     return 1 / (1 + exp(-BETA * x));
-}//g
+}
 
-// afgeleide van g
 double gprime(double x) {
     return BETA * g(x) * (1 - g(x));
-}//gprime
+}
 
 int main(int argc, char* argv[]) {
 
     int inputs, hiddens;            // aantal invoer- en verborgen knopen
     double input[MAX];              // de invoer is input[1]...input[inputs]
-    double inputtohidden[MAX][MAX]; // gewichten van invoerknopen 0..inputs
-    // naar verborgen knopen 1..hiddens
-    double hiddentooutput[MAX];     // gewichten van verborgen knopen 0..hiddens
-    // naar de ene uitvoerknoop
+    double inputtohidden[MAX][MAX]; // gewichten van invoerknopen 0..inputs naar verborgen knopen 1..hiddens
+    double hiddentooutput[MAX];     // gewichten van verborgen knopen 0..hiddens naar de ene uitvoerknoop
     double inhidden[MAX];           // invoer voor de verborgen knopen 1..hiddens
     double acthidden[MAX];          // en de uitvoer daarvan
     double inoutput;                // invoer voor de ene uitvoerknoop
     double netoutput;               // en de uitvoer daarvan: de net-uitvoer
     double target;                  // gewenste uitvoer
-    double error;                   // verschil tussen gewenste en
-    // geproduceerde uitvoer
+    double error;                   // verschil tussen gewenste en geproduceerde uitvoer
     double delta;                   // de delta voor de uitvoerknoop
-    double deltahidden[MAX];        // de delta's voor de verborgen
-    // knopen 1..hiddens
+    double deltahidden[MAX];        // de delta's voor de verborgen knopen 1..hiddens
     int epochs;                     // aantal trainingsvoorbeelden
-    int i, j, k;                    // tellertjes
-    //int seed = 1234;                // eventueel voor random-generator
 
     if (argc != 4) {
         cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs>" << endl;
         return 1;
-    }//if
-    inputs = atoi(argv[1]);
-    hiddens = atoi(argv[2]);
+    }
+
+    inputs = atoi(argv[1]) + 1;
+    hiddens = atoi(argv[2]) + 1;
     epochs = atoi(argv[3]);
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
@@ -82,7 +74,7 @@ int main(int argc, char* argv[]) {
         hiddentooutput[i] = dRand(-1.0, 1.0);
     }
 
-    for (i = 0; i < epochs; i++) {
+    for (int i = 0; i < epochs; i++) {
 
         //TODO-2 lees een voorbeeld in naar input en target, of genereer dat ter plekke:
         // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
@@ -90,7 +82,7 @@ int main(int argc, char* argv[]) {
         // input[1] = x; input[2] = y; target = dexor;
 
         target = true;
-        for (int j = 0; j < inputs; ++j) {
+        for (int j = 1; j < inputs; ++j) {
             input[j] = random() % 2;
             if (!input[j]) {
                 target = false;
@@ -118,10 +110,9 @@ int main(int argc, char* argv[]) {
 
         //TODO-5 update gewichten hiddentooutput en inputtohidden
 
-    }//for
+    }
 
     //TODO-6 beoordeel het netwerk en rapporteer
 
     return 0;
-}//main
-
+}
