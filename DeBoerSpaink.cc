@@ -100,6 +100,20 @@ int main(int argc, char* argv[]) {
         //TODO-3 stuur het voorbeeld door het netwerk
         // reken inhidden's uit, acthidden's, inoutput en netoutput
 
+        for (int j = 1; j < hiddens; ++j) {
+            inhidden[j] = 0;
+            for (int k = 0; k < inputs; ++k) {
+                inhidden[j] += input[k] * inputtohidden[k][j];
+            }
+            acthidden[j] = g(inhidden[j]);
+        }
+
+        inoutput = 0;
+        for (int j = 0; j < hiddens; ++j) {
+            inoutput += acthidden[j] * hiddentooutput[j];
+        }
+        netoutput = g(inoutput);
+
         //TODO-4 bereken error, delta, en deltahidden
 
         //TODO-5 update gewichten hiddentooutput en inputtohidden
