@@ -19,6 +19,12 @@ const int MAX = 20;
 const double ALPHA = 0.1;
 const double BETA = 1.0;
 
+double dRand(double fMin, double fMax)
+{
+    double f = (double)random() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
+
 // g-functie (sigmoid)
 double g(double x) {
     return 1 / (1 + exp(-BETA * x));
@@ -29,7 +35,7 @@ double gprime(double x) {
     return BETA * g(x) * (1 - g(x));
 }//gprime
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 
     int inputs, hiddens;            // aantal invoer- en verborgen knopen
     double input[MAX];              // de invoer is input[1]...input[inputs]
@@ -63,6 +69,13 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     //TODO-1 initialiseer de gewichten random tussen -1 en 1:
+    for (int i = 0; i < inputs; ++i)
+        for (int j = 0; j < hiddens; ++j)
+            inputtohidden[i][j] = dRand(-1.0, 1.0);
+
+    for (int i = 0; i < hiddens; ++i)
+        hiddentooutput[i] = dRand(-1.0, 1.0);
+
     // inputtohidden en hiddentooutput
     // rand ( ) levert geheel randomgetal tussen 0 en RAND_MAX; denk aan casten
 
