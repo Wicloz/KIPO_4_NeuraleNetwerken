@@ -9,8 +9,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <fstream>
-#include <cstdlib>
 
 using namespace std;
 
@@ -18,16 +16,16 @@ const int MAX = 20;
 const double ALPHA = 0.1;
 const double BETA = 1.0;
 
-double dRand(double fMin, double fMax) {
-    double f = (double) random() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
+double dRand(double min, double max) {
+    double d = (double) random() / RAND_MAX;
+    return min + d * (max - min);
 }
 
 double g(double x) {
     return 1 / (1 + exp(-BETA * x));
 }
 
-double gprime(double x) {
+double gPrime(double x) {
     return BETA * g(x) * (1 - g(x));
 }
 
@@ -137,9 +135,9 @@ int main(int argc, char* argv[]) {
         //TODO-4 bereken error, delta, en deltahidden
 
         error = target - netoutput;
-        delta = error * gprime(inoutput);
+        delta = error * gPrime(inoutput);
         for (int j = 0; j < hiddens; ++j) {
-            deltahidden[j] = gprime(inhidden[j]) * hiddentooutput[j] * delta;
+            deltahidden[j] = gPrime(inhidden[j]) * hiddentooutput[j] * delta;
         }
 
         //TODO-5 update gewichten hiddentooutput en inputtohidden
@@ -184,7 +182,7 @@ int main(int argc, char* argv[]) {
         for (int j = 1; j < inputs; ++j) {
             cout << input[j] << " ";
         }
-        cout << round(netoutput) << " - Error: " << error << endl;
+        cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
 
     }
 
