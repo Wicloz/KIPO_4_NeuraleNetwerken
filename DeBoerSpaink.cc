@@ -72,6 +72,7 @@ int main(int argc, char* argv[]) {
     double deltahidden[MAX];        // de delta's voor de verborgen knopen 1..hiddens
     int epochs;                     // aantal trainingsvoorbeelden
     int binary;                     // binaire functie om te leren (or=1, and=2, xor=3)
+    double totaalError;             // totaal van het kwadraat van de errors
 
     if (argc != 5 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
         cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor>" << endl;
@@ -88,6 +89,7 @@ int main(int argc, char* argv[]) {
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
     srand(time(nullptr));
     srandom(time(nullptr));
+    totaalError = 0;
 
     //TODO-1 initialiseer de gewichten random tussen -1 en 1:
     // inputtohidden en hiddentooutput
@@ -110,10 +112,30 @@ int main(int argc, char* argv[]) {
         // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
         // input[1] = x; input[2] = y; target = dexor;
 
-        for (int j = 1; j < inputs; ++j) {
-            input[j] = random() % 2;
-        }
-        target = getTarget(binary, input, inputs);
+        target = random() % 2;
+        do {
+            for (int j = 1; j < inputs; ++j) {
+                switch (binary) {
+                    case 1:
+                        if (target == 0) {
+                            input[j] = 0;
+                        } else {
+                            input[j] = random() % 2;
+                        }
+                        break;
+                    case 2:
+                        if (target == 1) {
+                            input[j] = 1;
+                        } else {
+                            input[j] = random() % 2;
+                        }
+                        break;
+                    case 3:
+                        input[j] = random() % 2;
+                        break;
+                }
+            }
+        } while (target != getTarget(binary, input, inputs));
 
         //TODO-3 stuur het voorbeeld door het netwerk
         // reken inhidden's uit, acthidden's, inoutput en netoutput
@@ -178,6 +200,7 @@ int main(int argc, char* argv[]) {
         netoutput = g(inoutput);
 
         error = target - netoutput;
+        totaalError += pow(error, 2);
 
         for (int j = 1; j < inputs; ++j) {
             cout << input[j] << " ";
@@ -185,6 +208,8 @@ int main(int argc, char* argv[]) {
         cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
 
     }
+
+    cout << endl << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
 
     return 0;
 }
