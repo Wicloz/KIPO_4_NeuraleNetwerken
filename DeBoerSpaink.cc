@@ -85,8 +85,8 @@ int main(int argc, char* argv[]) {
 
     bool useRelu = false;
 
-    if (argc != 5 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
-        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor>" << endl;
+    if (argc != 6 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
+        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <use relu?>" << endl;
         return 1;
     }
 
@@ -96,6 +96,7 @@ int main(int argc, char* argv[]) {
     binary = string(argv[4]) == "or" ? 1 : 0;
     binary = string(argv[4]) == "and" ? 2 : binary;
     binary = string(argv[4]) == "xor" ? 3 : binary;
+    useRelu = static_cast<bool>(atoi(argv[5]));
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
     srandom(42);
