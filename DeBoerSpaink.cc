@@ -65,7 +65,7 @@ bool getTarget(int type, double input[MAX], int inputs) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 
     int inputs, hiddens;            // aantal invoer- en verborgen knopen
     double input[MAX];              // de invoer is input[1]...input[inputs]
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
     bool useRelu = false;
 
     if (argc != 6 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
-        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <use relu?>" << endl;
+        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <activation func>" << endl;
         return 1;
     }
 
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
     binary = string(argv[4]) == "or" ? 1 : 0;
     binary = string(argv[4]) == "and" ? 2 : binary;
     binary = string(argv[4]) == "xor" ? 3 : binary;
-    useRelu = static_cast<bool>(atoi(argv[5]));
+    useRelu = string(argv[5]) == "ReLU";
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
     srandom(42);
@@ -184,41 +184,41 @@ int main(int argc, char* argv[]) {
             }
         }
 
-    }
+        totaalError = 0;
 
-    //TODO-6 beoordeel het netwerk en rapporteer
-    for (int i = 0; i < pow(2, inputs - 1); ++i) {
+        //TODO-6 beoordeel het netwerk en rapporteer
+        for (int z = 0; z < pow(2, inputs - 1); ++z) {
 
-        for (int j = 1; j < inputs; ++j) {
-            input[j] = (i >> (inputs - j - 1)) & 1;
-        }
-        target = getTarget(binary, input, inputs);
-
-        for (int j = 1; j < hiddens; ++j) {
-            inhidden[j] = 0;
-            for (int k = 0; k < inputs; ++k) {
-                inhidden[j] += input[k] * inputtohidden[k][j];
+            for (int j = 1; j < inputs; ++j) {
+                input[j] = (z >> (inputs - j - 1)) & 1;
             }
-            acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
+            target = getTarget(binary, input, inputs);
+
+            for (int j = 1; j < hiddens; ++j) {
+                inhidden[j] = 0;
+                for (int k = 0; k < inputs; ++k) {
+                    inhidden[j] += input[k] * inputtohidden[k][j];
+                }
+                acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
+            }
+
+            inoutput = 0;
+            for (int j = 0; j < hiddens; ++j) {
+                inoutput += acthidden[j] * hiddentooutput[j];
+            }
+            netoutput = useRelu ? relu(inoutput) : g(inoutput);
+
+            error = target - netoutput;
+            totaalError += pow(error, 2);
+
+//            for (int j = 1; j < inputs; ++j) {
+//                cout << input[j] << " ";
+//            }
+//            cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
         }
 
-        inoutput = 0;
-        for (int j = 0; j < hiddens; ++j) {
-            inoutput += acthidden[j] * hiddentooutput[j];
-        }
-        netoutput = useRelu ? relu(inoutput) : g(inoutput);
-
-        error = target - netoutput;
-        totaalError += pow(error, 2);
-
-        for (int j = 1; j < inputs; ++j) {
-            cout << input[j] << " ";
-        }
-        cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
-
+        cout << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
     }
-
-    cout << endl << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
 
     return 0;
 }
