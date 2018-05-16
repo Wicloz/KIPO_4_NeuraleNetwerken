@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -27,6 +28,14 @@ double g(double x) {
 
 double gPrime(double x) {
     return BETA * g(x) * (1 - g(x));
+}
+
+double relu(double x) {
+    return max(0.0, x);
+}
+
+double reluPrime(double x) {
+    return x > 0 ? 1 : 0;
 }
 
 bool getTarget(int type, double input[MAX], int inputs) {
@@ -82,13 +91,12 @@ int main(int argc, char* argv[]) {
     inputs = atoi(argv[1]) + 1;
     hiddens = atoi(argv[2]) + 1;
     epochs = atoi(argv[3]);
-    binary = string(argv[4]) == "or" ? 1 : binary;
+    binary = string(argv[4]) == "or" ? 1 : 0;
     binary = string(argv[4]) == "and" ? 2 : binary;
     binary = string(argv[4]) == "xor" ? 3 : binary;
     input[0] = -1;                  // invoer bias-knoop: altijd -1
     acthidden[0] = -1;              // verborgen bias-knoop: altijd -1
-    srand(time(nullptr));
-    srandom(time(nullptr));
+    srandom(42);
     totaalError = 0;
 
     //TODO-1 initialiseer de gewichten random tussen -1 en 1:
@@ -176,7 +184,6 @@ int main(int argc, char* argv[]) {
     }
 
     //TODO-6 beoordeel het netwerk en rapporteer
-
     for (int i = 0; i < pow(2, inputs - 1); ++i) {
 
         for (int j = 1; j < inputs; ++j) {
