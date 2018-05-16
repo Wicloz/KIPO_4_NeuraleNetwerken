@@ -138,7 +138,6 @@ int main(int argc, char* argv[]) {
         } while (target != getTarget(binary, input, inputs));
 
         //TODO-3 stuur het voorbeeld door het netwerk
-        // reken inhidden's uit, acthidden's, inoutput en netoutput
 
         for (int j = 1; j < hiddens; ++j) {
             inhidden[j] = 0;
