@@ -83,6 +83,8 @@ int main(int argc, char* argv[]) {
     int binary;                     // binaire functie om te leren (or=1, and=2, xor=3)
     double totaalError;             // totaal van het kwadraat van de errors
 
+    bool useRelu = false;
+
     if (argc != 5 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor")) {
         cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor>" << endl;
         return 1;
@@ -152,21 +154,21 @@ int main(int argc, char* argv[]) {
             for (int k = 0; k < inputs; ++k) {
                 inhidden[j] += input[k] * inputtohidden[k][j];
             }
-            acthidden[j] = g(inhidden[j]);
+            acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
         }
 
         inoutput = 0;
         for (int j = 0; j < hiddens; ++j) {
             inoutput += acthidden[j] * hiddentooutput[j];
         }
-        netoutput = g(inoutput);
+        netoutput = useRelu ? relu(inoutput) : g(inoutput);
 
         //TODO-4 bereken error, delta, en deltahidden
 
         error = target - netoutput;
-        delta = error * gPrime(inoutput);
+        delta = error * (useRelu ? reluPrime(inoutput) : gPrime(inoutput));
         for (int j = 0; j < hiddens; ++j) {
-            deltahidden[j] = gPrime(inhidden[j]) * hiddentooutput[j] * delta;
+            deltahidden[j] = (useRelu ? reluPrime(inhidden[j]) : gPrime(inhidden[j])) * hiddentooutput[j] * delta;
         }
 
         //TODO-5 update gewichten hiddentooutput en inputtohidden
@@ -196,14 +198,14 @@ int main(int argc, char* argv[]) {
             for (int k = 0; k < inputs; ++k) {
                 inhidden[j] += input[k] * inputtohidden[k][j];
             }
-            acthidden[j] = g(inhidden[j]);
+            acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
         }
 
         inoutput = 0;
         for (int j = 0; j < hiddens; ++j) {
             inoutput += acthidden[j] * hiddentooutput[j];
         }
-        netoutput = g(inoutput);
+        netoutput = useRelu ? relu(inoutput) : g(inoutput);
 
         error = target - netoutput;
         totaalError += pow(error, 2);
