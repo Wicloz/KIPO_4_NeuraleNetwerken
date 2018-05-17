@@ -4,7 +4,7 @@
 using namespace std;
 
 const int MAX = 20;
-const double ALPHA = 0.1;
+double ALPHA = 0.1;
 const double BETA = 1.0;
 
 inline double randomDouble(const double& min, const double& max) {
@@ -78,8 +78,8 @@ int main(int argc, char* argv[]) {
     bool useRelu;                   // of de relu of sigmoid als activatie functie wordt gebruikt
     int outputMode;                 // hoe de output weergeven wordt (1=laatste+tabel, 2=laatste, 3=alle)
 
-    if (argc != 7 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor") || (string(argv[5]) != "sigmoid" && string(argv[5]) != "ReLU")) {
-        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <sigmoid|ReLU> <output>" << endl;
+    if (argc != 8 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor") || (string(argv[5]) != "sigmoid" && string(argv[5]) != "ReLU")) {
+        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <sigmoid|ReLU> <output> <learning rate>" << endl;
         return 1;
     }
 
@@ -91,6 +91,7 @@ int main(int argc, char* argv[]) {
     binary = string(argv[4]) == "xor" ? 3 : binary;
     useRelu = string(argv[5]) == "ReLU";
     outputMode = atoi(argv[6]);
+    ALPHA = atoi(argv[7]);
 
     input[0] = -1;
     acthidden[0] = -1;
