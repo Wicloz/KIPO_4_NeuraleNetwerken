@@ -43,32 +43,36 @@ if __name__ == '__main__':
     ################
     # Test Hiddens #
     # ##############
-    # inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, '2') for hiddens in hiddensTest for binary in binaryTypes]
-    # results = [[0 for y in hiddensTest] for x in binaryTypes]
-    #
-    # for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-    #     results[binaryTypes.index(output['binary'])][hiddensTest.index(output['hiddens'])] = output['results'][-1]
-    #
-    # df = pd.DataFrame(np.transpose(results), index=hiddensTest, columns=binaryTypes)
-    # print(df)
-    #
-    # plot = df.plot.line(logy=True)
-    # plt.show()
+    inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, '2') for hiddens in hiddensTest for binary in binaryTypes]
+    results = [[0 for y in hiddensTest] for x in binaryTypes]
+
+    for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
+        results[binaryTypes.index(output['binary'])][hiddensTest.index(output['hiddens'])] = output['results'][-1]
+
+    df = pd.DataFrame(np.transpose(results), index=hiddensTest, columns=binaryTypes)
+    print(df)
+
+    plot = df.plot.line(logy=True)
+    plot.set_ylabel('Mean Squared Error')
+    plot.set_xlabel('Amount of Hidden Nodes')
+    plt.show()
 
     ###############
     # Test Epochs #
     ###############
-    # inputs = [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, '2') for epochs in epochsTest for binary in binaryTypes]
-    # results = [[0 for y in epochsTest] for x in binaryTypes]
-    #
-    # for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-    #     results[binaryTypes.index(output['binary'])][epochsTest.index(output['epochs'])] = output['results'][-1]
-    #
-    # df = pd.DataFrame(np.transpose(results), index=epochsTest, columns=binaryTypes)
-    # print(df)
-    #
-    # plot = df.plot.line(logx=True)
-    # plt.show()
+    inputs = [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, '2') for epochs in epochsTest for binary in binaryTypes]
+    results = [[0 for y in epochsTest] for x in binaryTypes]
+
+    for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
+        results[binaryTypes.index(output['binary'])][epochsTest.index(output['epochs'])] = output['results'][-1]
+
+    df = pd.DataFrame(np.transpose(results), index=epochsTest, columns=binaryTypes)
+    print(df)
+
+    plot = df.plot.line()
+    plot.set_ylabel('Mean Squared Error')
+    plot.set_xlabel('Amount of Epochs (as input)')
+    plt.show()
 
     ###################
     # Test Activation #
@@ -84,41 +88,6 @@ if __name__ == '__main__':
         print(df)
 
         plot = df.plot.line(logx=True)
+        plot.set_ylabel('Mean Squared Error')
+        plot.set_xlabel('Current Epoch')
         plt.show()
-
-    # # make inputs
-    # inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, 'hiddens') for hiddens in hiddensTest for binary in binaryTypes] \
-    #        + [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, 'epochs') for epochs in epochsTest for binary in binaryTypes] \
-    #        + [(inputsDefault, hiddensDefault, epochsDefault, binary, activation, 'activation-' + binary) for activation in activationTypes for binary in binaryTypes]
-    #
-    # # results storage
-    # results = {
-    #     'hiddens': [[] for x in binaryTypes],
-    #     'epochs': [[] for x in binaryTypes],
-    #     'activation-or': [[] for x in activationTypes],
-    #     'activation-and': [[] for x in activationTypes],
-    #     'activation-xor': [[] for x in activationTypes],
-    # }
-    #
-    # # run
-    # for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-    #     if 'activation' in output['fromTest']:
-    #         results[output['fromTest']][activationTypes.index(output['activation'])] = output['results']
-    #     else:
-    #         results[output['fromTest']][binaryTypes.index(output['binary'])].append(output['results'][-1])
-    #
-    # # display results
-    # dfs = {
-    #     'hiddens': pd.DataFrame(results['hiddens'], index=binaryTypes, columns=hiddensTest),
-    #     'epochs': pd.DataFrame(results['epochs'], index=binaryTypes, columns=epochsTest),
-    #     'activation-or': pd.DataFrame(results['activation'], index=activationTypes),
-    #     'activation-and': pd.DataFrame(results['activation'], index=activationTypes),
-    #     'activation-xor': pd.DataFrame(results['activation'], index=activationTypes),
-    # }
-    # print(dfs)
-    #
-    # plot = dfs['hiddens'].plot.scatter
-
-    # plt.pyplot.show()
-    # plot.get_figure().savefig('results.svg', format='svg')
-    # plot.get_figure().savefig('results.pdf', format='pdf')
