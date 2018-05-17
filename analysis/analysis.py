@@ -15,7 +15,7 @@ binaryDefault = 'xor'
 activationDefault = 'sigmoid'
 inputsDefault = '2'
 hiddensDefault = '2'
-epochsDefault = '99999'
+epochsDefault = '999999'
 
 binaryTypes = ['and', 'or', 'xor']
 activationTypes = ['sigmoid', 'ReLU']
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     ################
     # Test Hiddens #
-    ################
+    # ##############
     # inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, '2') for hiddens in hiddensTest for binary in binaryTypes]
     # results = [[0 for y in hiddensTest] for x in binaryTypes]
     #
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # df = pd.DataFrame(np.transpose(results), index=hiddensTest, columns=binaryTypes)
     # print(df)
     #
-    # plot = df.plot.line()
+    # plot = df.plot.line(logy=True)
     # plt.show()
 
     ###############
@@ -68,22 +68,22 @@ if __name__ == '__main__':
     # df = pd.DataFrame(np.transpose(results), index=epochsTest, columns=binaryTypes)
     # print(df)
     #
-    # plot = df.plot.line()
+    # plot = df.plot.line(logx=True)
     # plt.show()
 
     ###################
     # Test Activation #
     ###################
-    inputs = [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, '3') for epochs in epochsTest for binary in binaryTypes]
-    results = [[0 for y in epochsTest] for x in binaryTypes]
+    inputs = [(inputsDefault, hiddensDefault, epochsDefault, 'or', activation, '3') for activation in activationTypes]
+    results = [[] for x in activationTypes]
 
     for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-        results[binaryTypes.index(output['binary'])][epochsTest.index(output['epochs'])] = output['results'][-1]
+        results[activationTypes.index(output['activation'])] = output['results']
 
-    df = pd.DataFrame(np.transpose(results), index=epochsTest, columns=binaryTypes)
+    df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 1), columns=activationTypes)
     print(df)
 
-    plot = df.plot.line()
+    plot = df.plot.line(logx=True)
     plt.show()
 
     # # make inputs
