@@ -71,9 +71,9 @@ if __name__ == '__main__':
     # plot = df.plot.line()
     # plt.show()
 
-    ###############
+    ###################
     # Test Activation #
-    ###############
+    ###################
     inputs = [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, '3') for epochs in epochsTest for binary in binaryTypes]
     results = [[0 for y in epochsTest] for x in binaryTypes]
 
