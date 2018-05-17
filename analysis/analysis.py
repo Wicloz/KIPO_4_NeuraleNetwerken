@@ -18,8 +18,14 @@ epochsDefault = '999999'
 
 binaryTypes = ['and', 'or', 'xor']
 activationTypes = ['sigmoid', 'ReLU']
-hiddensTest = [str(x) for x in range(1, 10)]
-epochsTest = [str(x) for x in np.logspace(1, 7)]
+hiddensTest = []
+for x in [str(int(round(x))) for x in np.logspace(0, 2, 20)]:
+    if x not in hiddensTest:
+        hiddensTest.append(x)
+epochsTest = []
+for x in [str(int(round(x))) for x in np.logspace(0, 7, 100)]:
+    if x not in epochsTest:
+        epochsTest.append(x)
 
 fileLocation = '../cmake-build-debug/KIPO_4_NeuraleNetwerken'
 threadCount = 4
@@ -49,13 +55,13 @@ if __name__ == '__main__':
     for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
         results[binaryTypes.index(output['binary'])][hiddensTest.index(output['hiddens'])] = output['results'][-1]
 
-    df = pd.DataFrame(np.transpose(results), index=hiddensTest, columns=binaryTypes)
+    df = pd.DataFrame(np.transpose(results), index=[int(x) for x in hiddensTest], columns=binaryTypes)
     print(df)
 
-    plot = df.plot.line(logy=True)
-    plot.set_ylabel('Mean Squared Error')
-    plot.set_xlabel('Amount of Hidden Nodes')
-    plt.show()
+    plot = df.plot.line(logx=True, title='Fout per Aantal Verborgen Knopen')
+    plot.set_ylabel('Gemiddelde Kwadratische Fout')
+    plot.set_xlabel('Aantal Verborgen Knopen')
+    plt.show(logx=True)
 
     ###############
     # Test Epochs #
@@ -66,12 +72,12 @@ if __name__ == '__main__':
     for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
         results[binaryTypes.index(output['binary'])][epochsTest.index(output['epochs'])] = output['results'][-1]
 
-    df = pd.DataFrame(np.transpose(results), index=epochsTest, columns=binaryTypes)
+    df = pd.DataFrame(np.transpose(results), index=[int(x) for x in epochsTest], columns=binaryTypes)
     print(df)
 
-    plot = df.plot.line()
-    plot.set_ylabel('Mean Squared Error')
-    plot.set_xlabel('Amount of Epochs (as input)')
+    plot = df.plot.line(logx=True, title='Fout per Aantal Epochs')
+    plot.set_ylabel('Gemiddelde Kwadratische Fout')
+    plot.set_xlabel('Aantal Epochs (als input)')
     plt.show()
 
     ###################
@@ -87,7 +93,7 @@ if __name__ == '__main__':
         df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 1), columns=activationTypes)
         print(df)
 
-        plot = df.plot.line(logx=True)
-        plot.set_ylabel('Mean Squared Error')
-        plot.set_xlabel('Current Epoch')
+        plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie')
+        plot.set_ylabel('Gemiddelde Kwadratische Fout')
+        plot.set_xlabel('Huidige Epoch')
         plt.show()
