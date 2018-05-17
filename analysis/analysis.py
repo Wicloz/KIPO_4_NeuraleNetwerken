@@ -1,4 +1,3 @@
-import math
 import subprocess as sp
 import random
 import pandas as pd
@@ -74,17 +73,18 @@ if __name__ == '__main__':
     ###################
     # Test Activation #
     ###################
-    inputs = [(inputsDefault, hiddensDefault, epochsDefault, 'or', activation, '3') for activation in activationTypes]
-    results = [[] for x in activationTypes]
+    for binary in binaryTypes:
+        inputs = [(inputsDefault, hiddensDefault, epochsDefault, binary, activation, '3') for activation in activationTypes]
+        results = [[] for x in activationTypes]
 
-    for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-        results[activationTypes.index(output['activation'])] = output['results']
+        for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
+            results[activationTypes.index(output['activation'])] = output['results']
 
-    df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 1), columns=activationTypes)
-    print(df)
+        df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 1), columns=activationTypes)
+        print(df)
 
-    plot = df.plot.line(logx=True)
-    plt.show()
+        plot = df.plot.line(logx=True)
+        plt.show()
 
     # # make inputs
     # inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, 'hiddens') for hiddens in hiddensTest for binary in binaryTypes] \
