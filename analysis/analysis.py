@@ -61,7 +61,6 @@ if __name__ == '__main__':
     ##############
     # Test Alpha #
     ##############
-    start = time()
     inputs = [(inputsDefault, hiddensDefault, epochsDefault, binary, activationDefault, '2', alpha) for alpha in
               alphaTest for binary in binaryTypes]
     results = [[0 for y in alphaTest] for x in binaryTypes]
@@ -77,12 +76,10 @@ if __name__ == '__main__':
     plot.set_xlabel('Alpha')
     plt.show(logx=True)
     plt.show()
-    print('Time taken: ', time() - start)
 
     ################
     # Test Hiddens #
     # ##############
-    start = time()
     inputs = [(inputsDefault, hiddens, epochsDefault, binary, activationDefault, '2', alphaDefault) for hiddens in
               hiddensTest for binary in binaryTypes]
     results = [[0 for y in hiddensTest] for x in binaryTypes]
@@ -96,12 +93,10 @@ if __name__ == '__main__':
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Aantal Verborgen Knopen')
     plt.show(logx=True)
-    print('Time taken: ', time() - start)
 
     ###############
     # Test Epochs #
     ###############
-    start = time()
     inputs = [(inputsDefault, hiddensDefault, epochs, binary, activationDefault, '2', alphaDefault) for epochs in
               epochsTest for binary in binaryTypes]
     results = [[0 for y in epochsTest] for x in binaryTypes]
@@ -115,12 +110,10 @@ if __name__ == '__main__':
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Aantal Epochs (als input)')
     plt.show()
-    print('Time taken: ', time() - start)
 
     ###################
     # Test Activation #
     ###################
-    start = time()
     for binary in binaryTypes:
         inputs = [(inputsDefault, hiddensDefault, epochsDefault, binary, activation, '3', alphaDefault) for activation
                   in activationTypes]
@@ -135,6 +128,5 @@ if __name__ == '__main__':
         plot.set_ylabel('Gemiddelde Kwadratische Fout')
         plot.set_xlabel('Huidige Epoch')
         plt.show()
-    print('Time taken: ', time() - start)
 
 print('Total time taken:', time() - begin)
