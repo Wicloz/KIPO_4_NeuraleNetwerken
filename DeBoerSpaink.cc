@@ -1,11 +1,17 @@
+/* DeBoerSpaink.cc
+ * Wilco de Boer, Hermes Spaink
+ * Heeft minstens c++11 nodig voor compilatie
+ * Heeft veel command line argumenten nodig,
+ * zie output en commentaar bovenaan main
+ */
+
 #include <iostream>
 #include <cmath>
-
 using namespace std;
 
 const int MAX = 20;
-double ALPHA = 0.1;
-const double BETA = 1.0;
+double ALPHA = 0.2;
+double BETA = 1.0;
 
 inline double randomDouble(const double& min, const double& max) {
     double d = (double) rand() / RAND_MAX;
@@ -79,19 +85,19 @@ int main(int argc, char* argv[]) {
     int outputMode;                 // hoe de output weergeven wordt (1=laatste+tabel, 2=laatste, 3=alle)
 
     if (argc != 8 || (string(argv[4]) != "or" && string(argv[4]) != "and" && string(argv[4]) != "xor") || (string(argv[5]) != "sigmoid" && string(argv[5]) != "ReLU")) {
-        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <sigmoid|ReLU> <output> <learning rate>" << endl;
+        cout << "Gebruik: " << argv[0] << " <inputs> <hiddens> <epochs> <or|and|xor> <sigmoid|ReLU> <output> <alpha>" << endl;
         return 1;
     }
 
-    inputs = atoi(argv[1]) + 1;
-    hiddens = atoi(argv[2]) + 1;
-    epochs = atoi(argv[3]);
+    inputs = stoi(argv[1]) + 1;
+    hiddens = stoi(argv[2]) + 1;
+    epochs = stoi(argv[3]);
     binary = string(argv[4]) == "or" ? 1 : 0;
     binary = string(argv[4]) == "and" ? 2 : binary;
     binary = string(argv[4]) == "xor" ? 3 : binary;
     useRelu = string(argv[5]) == "ReLU";
-    outputMode = atoi(argv[6]);
-    ALPHA = atoi(argv[7]);
+    outputMode = stoi(argv[6]);
+    ALPHA = stod(argv[7]);
 
     input[0] = -1;
     acthidden[0] = -1;
@@ -183,9 +189,9 @@ int main(int argc, char* argv[]) {
 
         if (outputMode == 3 || ((outputMode == 1 || outputMode == 2) && i == epochs - 1)) {
             totaalError = 0;
-            for (int z = 0; z < pow(2, inputs - 1); ++z) {
-                for (int j = 1; j < inputs; ++j) {
-                    input[j] = (z >> (inputs - j - 1)) & 1;
+            for (int z = 0; z < pow(2, inputs - 1); ++z) { // rij in truth table
+                for (int j = 1; j < inputs; ++j) { // kolom in truth table
+                    input[j] = (z >> (inputs - j - 1)) & 1; // nummer (1 of 0) dat daar hoort
                 }
                 target = getTarget(binary, input, inputs);
 
