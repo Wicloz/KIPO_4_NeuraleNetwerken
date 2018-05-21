@@ -25,7 +25,7 @@ model = Model(inputs=visible, outputs=output)
 # Stochastic gradient descent optimizer.
 # Parameters are: Learning rate, learning rate decay, momentum and whether to apply Nesterov momentum
 # TODO adjust the learning rate and ...
-sgd = SGD(lr=0.2, decay=0.0, momentum=0.0, nesterov=False)
+sgd = SGD(lr=2, decay=0.0, momentum=0.0, nesterov=False)
 # Compile model for a mean squared error regression problem
 model.compile(loss='mse', optimizer=sgd, metrics=['accuracy'])
 # Train the model, iterating on the data in batches.

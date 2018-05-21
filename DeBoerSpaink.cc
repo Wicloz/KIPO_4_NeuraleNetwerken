@@ -118,6 +118,37 @@ int main(int argc, char* argv[]) {
     }
 
     for (int i = 0; i < epochs; ++i) {
+        //TODO-6 beoordeel het netwerk en rapporteer
+
+        if (outputMode == 3) {
+            totaalError = 0;
+            for (int z = 0; z < pow(2, inputs - 1); ++z) { // rij in truth table
+                for (int j = 1; j < inputs; ++j) { // kolom in truth table
+                    input[j] = (z >> (inputs - j - 1)) & 1; // nummer (1 of 0) dat daar hoort
+                }
+                target = getTarget(binary, input, inputs);
+
+                for (int j = 1; j < hiddens; ++j) {
+                    inhidden[j] = 0;
+                    for (int k = 0; k < inputs; ++k) {
+                        inhidden[j] += input[k] * inputtohidden[k][j];
+                    }
+                    acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
+                }
+
+                inoutput = 0;
+                for (int j = 0; j < hiddens; ++j) {
+                    inoutput += acthidden[j] * hiddentooutput[j];
+                }
+                netoutput = useRelu ? relu(inoutput) : g(inoutput);
+
+                error = target - netoutput;
+                totaalError += pow(error, 2);
+            }
+
+            cout << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
+        }
+
         //TODO-2 lees een voorbeeld in naar input en target, of genereer dat ter plekke:
         // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
         // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
@@ -184,45 +215,43 @@ int main(int argc, char* argv[]) {
                 inputtohidden[k][j] += ALPHA * input[k] * deltahidden[j];
             }
         }
+    }
 
-        //TODO-6 beoordeel het netwerk en rapporteer
+    //TODO-6 beoordeel het netwerk en rapporteer
 
-        if (outputMode == 3 || ((outputMode == 1 || outputMode == 2) && i == epochs - 1)) {
-            totaalError = 0;
-            for (int z = 0; z < pow(2, inputs - 1); ++z) { // rij in truth table
-                for (int j = 1; j < inputs; ++j) { // kolom in truth table
-                    input[j] = (z >> (inputs - j - 1)) & 1; // nummer (1 of 0) dat daar hoort
-                }
-                target = getTarget(binary, input, inputs);
+    totaalError = 0;
+    for (int z = 0; z < pow(2, inputs - 1); ++z) { // rij in truth table
+        for (int j = 1; j < inputs; ++j) { // kolom in truth table
+            input[j] = (z >> (inputs - j - 1)) & 1; // nummer (1 of 0) dat daar hoort
+        }
+        target = getTarget(binary, input, inputs);
 
-                for (int j = 1; j < hiddens; ++j) {
-                    inhidden[j] = 0;
-                    for (int k = 0; k < inputs; ++k) {
-                        inhidden[j] += input[k] * inputtohidden[k][j];
-                    }
-                    acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
-                }
-
-                inoutput = 0;
-                for (int j = 0; j < hiddens; ++j) {
-                    inoutput += acthidden[j] * hiddentooutput[j];
-                }
-                netoutput = useRelu ? relu(inoutput) : g(inoutput);
-
-                error = target - netoutput;
-                totaalError += pow(error, 2);
-
-                if (i == epochs - 1 && outputMode == 1) {
-                    for (int j = 1; j < inputs; ++j) {
-                        cout << input[j] << " ";
-                    }
-                    cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
-                }
+        for (int j = 1; j < hiddens; ++j) {
+            inhidden[j] = 0;
+            for (int k = 0; k < inputs; ++k) {
+                inhidden[j] += input[k] * inputtohidden[k][j];
             }
+            acthidden[j] = useRelu ? relu(inhidden[j]) : g(inhidden[j]);
+        }
 
-            cout << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
+        inoutput = 0;
+        for (int j = 0; j < hiddens; ++j) {
+            inoutput += acthidden[j] * hiddentooutput[j];
+        }
+        netoutput = useRelu ? relu(inoutput) : g(inoutput);
+
+        error = target - netoutput;
+        totaalError += pow(error, 2);
+
+        if (outputMode == 1) {
+            for (int j = 1; j < inputs; ++j) {
+                cout << input[j] << " ";
+            }
+            cout << "> " << round(netoutput) << " (Error: " << (error < 0 ? "" : " ") << error << ")" << endl;
         }
     }
+
+    cout << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
 
     return 0;
 }

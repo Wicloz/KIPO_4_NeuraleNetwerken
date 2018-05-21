@@ -25,7 +25,7 @@ epochsTest = []
 for x in [str(int(round(x))) for x in np.logspace(0, 7, 200)]:
     if x not in epochsTest:
         epochsTest.append(x)
-alphaTest = [str(x) for x in np.linspace(20/2000, 20, 2000)]
+alphaTest = [str(x) for x in np.linspace(0, 10, 1001)]
 
 fileLocation = '../cmake-build-debug/KIPO_4_NeuraleNetwerken'
 threadCount = 10
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     df = pd.DataFrame(np.transpose(results), index=[int(x) for x in hiddensTest], columns=binaryTypes)
 
-    plot = df.plot.line(logx=True, title='Fout per Aantal Verborgen Knopen')
+    plot = df.plot.line(title='Fout per Aantal Verborgen Knopen')
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Aantal Verborgen Knopen')
     plt.show()
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     df = pd.DataFrame(np.transpose(results), index=[float(x) for x in alphaTest], columns=binaryTypes)
 
-    plot = df.plot.line(logx=True, title='Fout na trainen met verschillende leersnelheden')
+    plot = df.plot.line(title='Fout per Leersnelheid')
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Alpha')
     plt.show()
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
             results[activationTypes.index(output['activation'])] = output['results']
 
-        df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 1), columns=activationTypes)
+        df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 2), columns=activationTypes)
 
         plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie')
         plot.set_ylabel('Gemiddelde Kwadratische Fout')
