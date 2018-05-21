@@ -111,17 +111,16 @@ if __name__ == '__main__':
         epochsThis = str(int(round(epochsThis)))
         alphaThis = str(float(alphaDefault) * multiplier)
 
-        for binary in binaryTypes:
-            inputs = [(inputsDefault, hiddensDefault, epochsThis, binary, activation, '3', alphaThis) for activation in activationTypes]
-            results = [[] for x in activationTypes]
+        inputs = [(inputsDefault, hiddensDefault, epochsThis, binary, activation, '3', alphaThis) for activation in activationTypes for binary in binaryTypes]
+        results = [[] for x in activationTypes for y in binaryTypes]
 
-            for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-                results[activationTypes.index(output['activation'])] = output['results']
+        for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
+            results[binaryTypes.index(output['binary']) * len(activationTypes) + activationTypes.index(output['activation'])] = output['results']
 
-            df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsThis) + 2), columns=activationTypes)
+        df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsThis) + 2), columns=[x + ' (' + y + ')' for x in binaryTypes for y in activationTypes])
 
-            plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie, met ALPHA=' + alphaThis)
-            plot.set_ylabel('Gemiddelde Kwadratische Fout')
-            plot.set_xlabel('Huidige Epoch')
-            plt.show()
-            plot.get_figure().savefig('activation_' + binary + '_' + alphaThis.replace('.', '') + '.pdf', format='pdf')
+        plot = df.plot.line(logx=True, title='Fout tijdens het trainen, met ALPHA=' + alphaThis)
+        plot.set_ylabel('Gemiddelde Kwadratische Fout')
+        plot.set_xlabel('Huidige Epoch')
+        plt.show()
+        plot.get_figure().savefig('activation_' + alphaThis.replace('.', '') + '.pdf', format='pdf')
