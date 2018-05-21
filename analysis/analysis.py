@@ -8,6 +8,7 @@ import numpy as np
 
 # constant random seed
 random.seed(42)
+np.random.seed(42)
 
 # parameters
 binaryDefault = 'xor'
@@ -61,6 +62,7 @@ if __name__ == '__main__':
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Aantal Verborgen Knopen')
     plt.show()
+    plot.get_figure().savefig('hiddens.pdf', format='pdf')
 
     ###############
     # Test Epochs #
@@ -77,6 +79,7 @@ if __name__ == '__main__':
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Aantal Epochs (als input)')
     plt.show()
+    plot.get_figure().savefig('epochs.pdf', format='pdf')
 
     ##############
     # Test Alpha #
@@ -93,6 +96,7 @@ if __name__ == '__main__':
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
     plot.set_xlabel('Alpha')
     plt.show()
+    plot.get_figure().savefig('alpha.pdf', format='pdf')
 
     ###################
     # Test Activation #
@@ -110,3 +114,4 @@ if __name__ == '__main__':
         plot.set_ylabel('Gemiddelde Kwadratische Fout')
         plot.set_xlabel('Huidige Epoch')
         plt.show()
+        plot.get_figure().savefig('activation_' + binary + '.pdf', format='pdf')
