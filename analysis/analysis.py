@@ -15,8 +15,8 @@ binaryDefault = 'xor'
 activationDefault = 'sigmoid'
 inputsDefault = '2'
 hiddensDefault = '2'
-epochsDefault = '100000'
-alphaDefault = '0.2'
+epochsDefault = '10000'
+alphaDefault = '2'
 
 binaryTypes = ['and', 'or', 'xor']
 activationTypes = ['sigmoid', 'ReLU']
@@ -25,7 +25,7 @@ epochsTest = []
 for x in [str(int(round(x))) for x in np.logspace(0, 7, 200)]:
     if x not in epochsTest:
         epochsTest.append(x)
-alphaTest = [str(x) for x in np.linspace(0, 1, 101)]
+alphaTest = [str(x) for x in np.linspace(20/2000, 20, 2000)]
 
 fileLocation = '../cmake-build-debug/KIPO_4_NeuraleNetwerken'
 threadCount = 10
