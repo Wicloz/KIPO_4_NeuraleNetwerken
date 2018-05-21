@@ -1,3 +1,4 @@
+import math
 import subprocess as sp
 import random
 import pandas as pd
@@ -26,6 +27,7 @@ for x in [str(int(round(x))) for x in np.logspace(0, 7, 200)]:
     if x not in epochsTest:
         epochsTest.append(x)
 alphaTest = [str(x) for x in np.linspace(0, 10, 1001)]
+activationMultipliersTest = [0.1, 1, 1000]
 
 fileLocation = '../cmake-build-debug/KIPO_4_NeuraleNetwerken'
 threadCount = 10
@@ -94,24 +96,32 @@ if __name__ == '__main__':
 
     plot = df.plot.line(title='Fout per Leersnelheid')
     plot.set_ylabel('Gemiddelde Kwadratische Fout')
-    plot.set_xlabel('Alpha')
+    plot.set_xlabel('ALPHA')
     plt.show()
     plot.get_figure().savefig('alpha.pdf', format='pdf')
 
     ###################
     # Test Activation #
     ###################
-    for binary in binaryTypes:
-        inputs = [(inputsDefault, hiddensDefault, epochsDefault, binary, activation, '3', alphaDefault) for activation in activationTypes]
-        results = [[] for x in activationTypes]
+    for multiplier in activationMultipliersTest:
+        if multiplier > 1:
+            epochsThis = int(epochsDefault) / math.sqrt(multiplier)
+        else:
+            epochsThis = int(epochsDefault) / math.pow(multiplier, 2)
+        epochsThis = str(int(round(epochsThis)))
+        alphaThis = str(float(alphaDefault) * multiplier)
 
-        for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
-            results[activationTypes.index(output['activation'])] = output['results']
+        for binary in binaryTypes:
+            inputs = [(inputsDefault, hiddensDefault, epochsThis, binary, activation, '3', alphaThis) for activation in activationTypes]
+            results = [[] for x in activationTypes]
 
-        df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsDefault) + 2), columns=activationTypes)
+            for output in tqdm(pool.imap_unordered(runAnalysis, inputs), total=len(inputs)):
+                results[activationTypes.index(output['activation'])] = output['results']
 
-        plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie')
-        plot.set_ylabel('Gemiddelde Kwadratische Fout')
-        plot.set_xlabel('Huidige Epoch')
-        plt.show()
-        plot.get_figure().savefig('activation_' + binary + '.pdf', format='pdf')
+            df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsThis) + 2), columns=activationTypes)
+
+            plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie, met ALPHA=' + alphaThis)
+            plot.set_ylabel('Gemiddelde Kwadratische Fout')
+            plot.set_xlabel('Huidige Epoch')
+            plt.show()
+            plot.get_figure().savefig('activation_' + binary + '_' + alphaThis.replace('.', '') + '_.pdf', format='pdf')
