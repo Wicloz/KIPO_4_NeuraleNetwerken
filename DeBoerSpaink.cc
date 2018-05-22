@@ -107,14 +107,14 @@ int main(int argc, char* argv[]) {
     // inputtohidden en hiddentooutput
     // rand ( ) levert geheel randomgetal tussen 0 en RAND_MAX; denk aan casten
 
-    for (int i = 0; i < inputs; ++i) {
-        for (int j = 0; j < hiddens; ++j) {
-            inputtohidden[i][j] = randomDouble(-1.0, 1.0);
+    for (int j = 1; j < hiddens; ++j) {
+        for (int k = 0; k < inputs; ++k) {
+            inputtohidden[k][j] = randomDouble(-1.0, 1.0);
         }
     }
 
-    for (int i = 0; i < hiddens; ++i) {
-        hiddentooutput[i] = randomDouble(-1.0, 1.0);
+    for (int j = 0; j < hiddens; ++j) {
+        hiddentooutput[j] = randomDouble(-1.0, 1.0);
     }
 
     for (int i = 0; i < epochs; ++i) {
