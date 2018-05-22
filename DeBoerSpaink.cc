@@ -251,7 +251,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    cout << "Mean squared error: " << totaalError / pow(2, inputs - 1) << endl;
+    cout << "Mean Squared Error: " << totaalError / pow(2, inputs - 1) << endl;
 
     return 0;
 }
