@@ -26,8 +26,8 @@ epochsTest = []
 for x in [str(int(round(x))) for x in np.logspace(0, 7, 200)]:
     if x not in epochsTest:
         epochsTest.append(x)
-alphaTest = [str(x) for x in np.linspace(0, 10, 1001)]
-activationMultipliersTest = [0.1, 1, 1000]
+alphaTest = [str(x) for x in np.linspace(0, 20, 1001)]
+activationMultipliersTest = [0.1, 1, 10, 100, 1000]
 
 fileLocation = '../cmake-build-debug/KIPO_4_NeuraleNetwerken'
 threadCount = 10
