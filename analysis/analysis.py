@@ -124,4 +124,4 @@ if __name__ == '__main__':
             plot.set_ylabel('Gemiddelde Kwadratische Fout')
             plot.set_xlabel('Huidige Epoch')
             plt.show()
-            plot.get_figure().savefig('activation_' + binary + '_' + alphaThis.replace('.', '') + '.pdf', format='pdf')
+            plot.get_figure().savefig('activation_' + binary + '_' + alphaThis.rstrip('0').replace('.', '') + '.pdf', format='pdf')
