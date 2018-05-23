@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
             df = pd.DataFrame(np.transpose(results), index=range(1, int(epochsThis) + 2), columns=activationTypes)
 
-            plot = df.plot.line(logx=True, title='Fout tijdens het trainen voor de \'' + binary + '\' functie, met ALPHA=' + alphaThis)
+            plot = df.plot.line(logx=True, title='Fout tijdens het trainen van de \'' + binary + '\' operatie, met ALPHA=' + alphaThis)
             plot.set_ylabel('Gemiddelde Kwadratische Fout')
             plot.set_xlabel('Huidige Epoch')
             plt.show()
